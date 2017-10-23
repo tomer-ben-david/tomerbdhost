@@ -24,12 +24,22 @@ node {
     }
     stage('Build Docker image') {
         dir('host-id-app'){
-            built_img = docker.build(image, '.')
+            built_img = docker.build("${image}:${tag}", '.')
         }    
     }
+    ////commenting usage of dockerp plugin since its broken with docker 1.12 (using of .dockercfg is deprecated)
+    ////and uses only .docker/config which is not created by the withRegistry method
+    //stage('Push Docker image to Azure Container Registry') {
+    //    docker.withRegistry("https://${acrUrl}", acrCredentialsId) {
+    //        built_img.push(tag);
+    //  }
+    //}
     stage('Push Docker image to Azure Container Registry') {
-        docker.withRegistry("https://${acrUrl}", acrCredentialsId) {
-            built_img.push(tag);
+       
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredentialsId,
+        usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            sh "docker login https://${acrUrl} -u $USERNAME -p $PASSWORD"
+            sh "docker push ${image}:${tag}"
       }
     }
     stage('rollout deployment in kubernetes'){
