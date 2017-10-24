@@ -5,8 +5,9 @@ properties([pipelineTriggers([githubPush()])])
 //def image = "${acrUrl}/host-id"
 
 //##GOOGLE
+def gce_project = 'iftachtest'
 def acrUrl = 'gcr.io'
-def image = "${acrUrl}/iftachtest/host-id"
+def image = "${acrUrl}/${gce_project}/host-id"
 def gcrSecretPath = '/root/key.json'
 
 def gitHubRepoUrl = 'https://github.com/iftachsc/hostidapp.git'
