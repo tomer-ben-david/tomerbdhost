@@ -1,8 +1,10 @@
 properties([pipelineTriggers([githubPush()])])
 
-def acrUrl = '<acr-name>.azurecr.io'
+//def acrUrl = '<acr-name>.azurecr.io'
+def acrUrl = 'gcr.io'
 def gitHubRepoUrl = '<github-repo-url>'
-def image = "${acrUrl}/host-id"
+//def image = "${acrUrl}/host-id"
+def image = "${acrUrl}/iftachtest/host-id"
 def shortCommit = ''
 def tag = ''
 
@@ -34,13 +36,22 @@ node {
     //        built_img.push(tag);
     //  }
     //}
-    stage('Push Docker image to Azure Container Registry') {
-       
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredentialsId,
-        usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-            sh "docker login https://${acrUrl} -u $USERNAME -p $PASSWORD"
-            sh "docker push ${image}:${tag}"
-      }
+    if(acrUrl.contains('azurecr.io'))
+    {   
+        stage('Push Docker image to Azure Container Registry') {
+
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredentialsId,
+            usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                sh "docker login https://${acrUrl} -u $USERNAME -p $PASSWORD"
+                sh "docker push ${image}:${tag}"
+          }
+        }
+    }
+    if(acrUrl.contains('gcr.io')){
+        stage('Push Docker image to Google Container Registry') {
+            sh "docker login -u _json_key -p \"\$(cat key.json)\" https://${acrUrl}"
+            sh "docker push ${image}:${tag}"      
+        }
     }
     stage('rollout deployment in kubernetes'){
         
