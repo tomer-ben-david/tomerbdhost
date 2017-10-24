@@ -9,7 +9,7 @@ def acrUrl = 'gcr.io'
 def image = "${acrUrl}/iftachtest/host-id"
 def gcrSecretPath = '/root/key.json'
 
-def gitHubRepoUrl = '<github-repo-url>'
+def gitHubRepoUrl = 'https://github.com/iftachsc/hostidapp.git'
 def shortCommit = ''
 def tag = ''
 
