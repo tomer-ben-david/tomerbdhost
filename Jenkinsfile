@@ -1,10 +1,15 @@
 properties([pipelineTriggers([githubPush()])])
 
+//## AZURE ##
 //def acrUrl = '<acr-name>.azurecr.io'
-def acrUrl = 'gcr.io'
-def gitHubRepoUrl = '<github-repo-url>'
 //def image = "${acrUrl}/host-id"
+
+//##GOOGLE
+def acrUrl = 'gcr.io'
 def image = "${acrUrl}/iftachtest/host-id"
+def gcrSecretPath = '/root/key.json'
+
+def gitHubRepoUrl = '<github-repo-url>'
 def shortCommit = ''
 def tag = ''
 
@@ -49,7 +54,7 @@ node {
     }
     if(acrUrl.contains('gcr.io')){
         stage('Push Docker image to Google Container Registry') {
-            sh "docker login -u _json_key -p \"\$(cat key.json)\" https://${acrUrl}"
+            sh "docker login -u _json_key -p \"\$(cat ${gcrSecretPath})\" https://${acrUrl}"
             sh "docker push ${image}:${tag}"      
         }
     }
