@@ -3,9 +3,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>host-id app</title>
+        <link rel="stylesheet" type="text/css" href="index.css" media="screen" />
+        <style media="screen" type="text/css">
+          
+
+        </style>
     </head>
     <body>
-<h2>Hii Microsoft AZURE K8S session! </h2>
+    <div class="main">
+       <h3>Hi K8S Course !Session!</h3>
     <pre>    
   _  __     _                          _              ____  _       _     _ 
  | |/ /   _| |__   ___ _ __ _ __   ___| |_ ___  ___  | __ )| | __ _| |_  | |
@@ -14,7 +20,11 @@
  |_|\_\__,_|_.__/ \___|_|  |_| |_|\___|\__\___||___/ |____/|_|\__,_|\__| (_)
                                                                             
 </pre>
-<h3>hostname: </h3><h1>{{podName}}</h1>
+<div style="width: 200px;background-color: #282828;padding: 8px 8px 8px 8px;height: 300px; border-radius: 10px;margin-left:20px">
+<h3>hostname: </h3><h2>{{podName}}</h2>
+{{sourceIpHtml}}
+</div>
+</div>
 </body>
 </html>
 
