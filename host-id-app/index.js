@@ -1,10 +1,16 @@
 var http = require('http');
 var app = require('express')();
-var serveStatic = require('serve-static')
 var fs = require('fs');
-var os = require('os');
-var html = ''
+app.get('/', function (req, res) {
+//-H Metadata-Flavor:Google
+var options = {
+  host: 'metadata.google.internal',
+  path: '/computeMetadata/v1/instance/zone',
+  port: '80',
+  headers: {'Metadata-Flavor':'Google'}
+};
 
+var html = ''
 fs.readFile('index.html', 'utf8', function (err,data) {
   if (err) {
     html = err;
@@ -13,25 +19,22 @@ fs.readFile('index.html', 'utf8', function (err,data) {
     html = data;
  }
 })
-app.get('/', function (req, res) {
 
-    var result;
-    console.log('yay i was called at',new Date().toISOString());
-    result = html.replace(/{{podName}}/g, os.hostname())
-    if(process.env.LOG_SOURCE_IP) { 
-      var sourceIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-      console.log("Getting request from: " + sourceIp);
-      result = result.replace(/{{sourceIpHtml}}/g, '<h3>Source IP: ' + sourceIp  +'</h3>')
-    }
-    else{
-      result = result.replace(/{{sourceIpHtml}}/g, '')
-    }
+var result;
+  http.request(options, function(response) {
+    response.on('data', function (chunk) {
+    console.log('yayyy');
+    result = html.replace(/{{zone}}/g, chunk.toString().split('/').pop())
     fs.writeFileSync('rendered.html', result)
+});
     res.set('Content-Type', 'text/html');
     res.sendFile('rendered.html',  { root: __dirname })
-  });
-
-app.use(serveStatic(__dirname));
-
-console.log('host-id running. Listening on port 3000');
-app.listen(3000, '0.0.0.0');
+    //response.pipe(res);
+  }).on('error', function(e) {
+    console.log('errr2')
+    res.sendStatus(500);
+  }).end();
+});
+app.listen(3000, function () {
+  console.log('Example app listening on port 3000!');
+});
