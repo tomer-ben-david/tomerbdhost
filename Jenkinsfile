@@ -17,7 +17,7 @@ def acrCredentialsId = 'acr'
 node {
     def built_img = ''
     stage('Checkout git repo') {
-      sh 'ls /root/.kube'
+      //sh 'ls /root/.kube'
       sh 'which kubectl'
       git branch: 'master', url: gitHubRepoUrl
       gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
