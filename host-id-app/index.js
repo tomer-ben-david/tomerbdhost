@@ -4,7 +4,7 @@ var serveStatic = require('serve-static')
 var fs = require('fs');
 var os = require('os');
 var html = ''
-
+var port = process.env.EXPRESS_PORT ? process.env.EXPRESS_PORT : 3
 fs.readFile('index.html', 'utf8', function (err,data) {
   if (err) {
     html = err;
@@ -33,5 +33,5 @@ app.get('/', function (req, res) {
 
 app.use(serveStatic(__dirname));
 
-console.log('host-id running. Listening on port 3000');
-app.listen(3000, '0.0.0.0');
+console.log('host-id running. Listening on port ' + port);
+app.listen(port, '0.0.0.0');
