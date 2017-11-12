@@ -4,7 +4,7 @@ var serveStatic = require('serve-static')
 var fs = require('fs');
 var os = require('os');
 var html = ''
-var port = process.env.EXPRESS_PORT ? process.env.EXPRESS_PORT : 3
+var port = process.env.EXPRESS_PORT ? process.env.EXPRESS_PORT : 3000
 fs.readFile('index.html', 'utf8', function (err,data) {
   if (err) {
     html = err;
