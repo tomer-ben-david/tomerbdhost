@@ -16,7 +16,7 @@ fs.readFile('index.html', 'utf8', function (err,data) {
 app.get('/', function (req, res) {
 
     var result;
-    console.log('yay i was called at',new Date().toISOString());
+    console.log("yay i was called at " + new Date().toISOString() + ". Reply from: ", os.hostname());
     result = html.replace(/{{podName}}/g, os.hostname())
     if(process.env.LOG_SOURCE_IP) { 
       var sourceIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress
