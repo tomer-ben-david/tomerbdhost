@@ -13,6 +13,10 @@ fs.readFile('index.html', 'utf8', function (err,data) {
     html = data;
  }
 })
+app.get('/version', function (req, res) {
+  res.set('Content-Type', 'text/html');
+  res.send(os.hostname());
+})
 app.get('/', function (req, res) {
 
     var result;
