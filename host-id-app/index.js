@@ -42,7 +42,7 @@ app.use(serveStatic(__dirname));
 
 
 // listen for INT signal e.g. Ctrl-C
-
+app.listen(port, '0.0.0.0');
 process.on('SIGINT', function(message) {
     gracefulExit.gracefulExitHandler(app, server, {
         socketio: app.settings.socketio
