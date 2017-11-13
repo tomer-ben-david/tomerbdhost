@@ -1,7 +1,8 @@
 var http = require('http');
 var app = require('express')();
+http = require('http')
 var gracefulExit = require('express-graceful-exit');
-
+var server = http.createServer(app)
 var serveStatic = require('serve-static')
 var fs = require('fs');
 var os = require('os');
@@ -42,7 +43,7 @@ app.use(serveStatic(__dirname));
 
 
 // listen for INT signal e.g. Ctrl-C
-app.listen(port, '0.0.0.0');
+server.listen(port, '0.0.0.0');
 process.on('SIGINT', function(message) {
     gracefulExit.gracefulExitHandler(app, server, {
         socketio: app.settings.socketio
