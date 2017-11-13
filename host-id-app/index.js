@@ -15,7 +15,7 @@ fs.readFile('index.html', 'utf8', function (err,data) {
 })
 app.get('/version', function (req, res) {
   res.set('Content-Type', 'text/html');
-  res.send(os.hostname());
+  res.send(os.hostname() + '\n');
 })
 app.get('/', function (req, res) {
 
