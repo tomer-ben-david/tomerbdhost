@@ -42,16 +42,34 @@ app.use(gracefulExit.middleware(app));
 app.use(serveStatic(__dirname));
 
 
-// listen for INT signal e.g. Ctrl-C
 server.listen(port, '0.0.0.0');
-process.on('SIGINT', function(message) {
-    gracefulExit.gracefulExitHandler(app, server, {
-        socketio: app.settings.socketio
-    })
-})
 
-process.on('SIGTERM', function(message) {
-    gracefulExit.gracefulExitHandler(app, server, {
-        socketio: app.settings.socketio
-    })
-})
+setInterval(() => server.getConnections(
+    (err, connections) => console.log(`${connections} connections currently open`)
+), 1000);
+
+process.on('SIGTERM', shutDown);
+process.on('SIGINT', shutDown);
+
+let connections = [];
+
+server.on('connection', connection => {
+    connections.push(connection);
+    connection.on('close', () => connections = connections.filter(curr => curr !== connection));
+});
+
+function shutDown() {
+    console.log('Received kill signal, shutting down gracefully');
+    server.close(() => {
+        console.log('Closed out remaining connections');
+        process.exit(0);
+    });
+
+    setTimeout(() => {
+        console.error('Could not close connections in time, forcefully shutting down');
+        process.exit(1);
+    }, 10000);
+
+    connections.forEach(curr => curr.end());
+    setTimeout(() => connections.forEach(curr => curr.destroy()), 5000);
+}
