@@ -1,5 +1,7 @@
 var http = require('http');
 var app = require('express')();
+var gracefulExit = require('express-graceful-exit');
+
 var serveStatic = require('serve-static')
 var fs = require('fs');
 var os = require('os');
@@ -35,29 +37,20 @@ app.get('/', function (req, res) {
     res.sendFile('rendered.html',  { root: __dirname })
   });
 
+app.use(gracefulExit.middleware(app));
 app.use(serveStatic(__dirname));
 
 
-// listen for TERM signal .e.g. kill 
-process.on ('SIGTERM', gracefulShutdown);
-
 // listen for INT signal e.g. Ctrl-C
-process.on ('SIGINT', gracefulShutdown);  
 
-console.log('host-id running. Listening on port ' + port);
-app.listen(port, '0.0.0.0');
+process.on('SIGINT', function(message) {
+    gracefulExit.gracefulExitHandler(app, server, {
+        socketio: app.settings.socketio
+    })
+})
 
-
-var gracefulShutdown = function() {
-  console.log("Received kill signal, shutting down gracefully.");
-  server.close(function() {
-    console.log("Closed out remaining connections.");
-    process.exit()
-  });
-  
-   // if after 
-   setTimeout(function() {
-       console.error("Could not close connections in time, forcefully shutting down");
-       process.exit()
-  }, 10*1000);
-}
+process.on('SIGTERM', function(message) {
+    gracefulExit.gracefulExitHandler(app, server, {
+        socketio: app.settings.socketio
+    })
+})
