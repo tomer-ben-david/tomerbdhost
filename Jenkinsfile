@@ -1,4 +1,4 @@
-properties([pipelineTriggers([githubPush()])])
+//properties([pipelineTriggers([githubPush()])])
 
 //## AZURE ##
 //def acrUrl = '<acr-name>.azurecr.io'
