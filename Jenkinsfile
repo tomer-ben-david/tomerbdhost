@@ -12,11 +12,11 @@
 //def gcrSecretPath = '/root/key.json'
 
 //##DOCKERHUB
-def dockerHubUser = "<yourDockerHubUser>"
-def dockerHubPwd = "<yourDockerHubPwd>"
-def image = "${dockerHubUser}/host-id"
+def dockerHubUser = "tomerbd1@gmail.com"
+def dockerHubPwd = "12345678"
+def image = "${dockerHubUser}/tomerbdhost"
 
-def gitHubRepoUrl = "https://github.com/${dockerHubUser}/host-id-app.git"
+def gitHubRepoUrl = "https://github.com/tomer-bendavid/tomerbdhost.git"
 def shortCommit = ''
 def tag = ''
 
